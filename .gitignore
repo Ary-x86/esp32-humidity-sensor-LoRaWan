@@ -1,0 +1,11 @@
+# Secrets
+src/firmware_lorawan/secrets.h
+
+# PlatformIO
+.pio/
+.vscode/
+
+# Build artifacts
+*.o
+*.a
+*.so
