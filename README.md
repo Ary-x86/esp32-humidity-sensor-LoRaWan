@@ -15,7 +15,9 @@ Because of this, the current status is:
 * **Testing on TTN with LoRaWan 1.1:** To test the physical device sending data all the way to a cloud platform, the current working method for LoRaWan 1.1 is to use **OTAA with The Things Network (TTN)**. OTAA works with LoRaWAN 1.1, but unfortunately KPN doesn't (yet) support LoRaWan 1.1.
 
 The current goal is to get OTAA working with KPN's LoRaWan 1.0.4. The next major update will be the **"OTAA Support Update"** once the downlink issue with KPN Things is resolved.
+
 ![screenshot](docs/Prototype state annotation crop.png)
+
 ![Image]([https://github.com/[username]/[reponame]/blob/[branch]/image.jpg](https://github.com/Ary-x86/esp32-humidity-sensor-LoRaWan/blob/e34475d61292b6a5a50941ba6618f04556c8cb64/docs/Prototype%20state%20annotation%20crop.png)?raw=true)
 
 
