@@ -44,14 +44,14 @@ Before flashing the device, you need to register it on The Things Network to get
     * Select the **Manually** tab.
     * **Frequency plan:** Choose the one for your region (e.g., `Europe 863-870 MHz (SF9 for RX2 - recommended)`).
     * **LoRaWAN version:** Select **`LoRaWAN Specification 1.1.0`**. This is critical.
-    * **JoinEUI:** You can leave this as all zeros (`0000000000000000`).
+    * **JoinEUI:** You can fill this in yourself or leave this as all zeros (`0000000000000000`).
     * **DevEUI & Keys:** Click the **Generate** button next to `DevEUI`, `AppKey`, and `NwkKey` to have TTN create them for you.
     * Give the device a memorable ID and click **Register end device**.
 
 4.  **Enable Frame Counter Resets (For Development ONLY):**
     * On your new device's page, go to the **General settings** tab.
     * Expand the **Join settings** section.
-    * Check the box for **Resets join nonces** (or "Resets Frame Counters"). This is necessary to allow your device to rejoin repeatedly during testing without being blocked.
+    * Check the box for **Resets join nonces** (or "Resets Frame Counters"). This is necessary to allow your device to rejoin repeatedly during testing without being blocked. Once the first full OTAA support update released, this will not be necessary.
 
 ### Part 2: Configuring and Flashing the Firmware
 
@@ -63,7 +63,8 @@ Before flashing the device, you need to register it on The Things Network to get
 2.  **Hardware Placement:** Remember that LoRa is long-range. Keep your device at least **5-10 meters (15-30 feet)** away from your gateway, preferably with a wall in between, to prevent the gateway's powerful signal from overwhelming your device's receiver.
 
 3.  **Compile and Upload:**
-    * It is highly recommended to use [PlatformIO](https://platformio.org/) to build this project.
+    * It is recommended to use [PlatformIO](https://platformio.org/) to build this project. Arduino IDE is possible too.
+    * Currently, it's an Arduino IDE (.ino) file. To use in PlatformIO, change the extension to .cpp
     * Open this project folder in VS Code with the PlatformIO extension.
     * Select the `ttn_otaa` environment from the PlatformIO toolbar.
     * Click **Upload**.
@@ -75,7 +76,7 @@ The firmware sends a very compact binary payload. You need to tell TTN how to de
 1.  In the TTN console, go to your device's page.
 2.  Click on **Payload formatters** in the left menu, then **Uplink**.
 3.  Select **Custom Javascript formatter**.
-4.  Delete the default code and paste the entire contents of the **`src/firmware_ttn_otaa/TTN_Payload_Formatter.js`** file from this repository.
+4.  Delete the default code and paste the entire contents of the **`src/firmware_lorawan_1.1_TTN/TTN_Payload_Formatter.js`** file from this repository.
 5.  Save the changes.
 
-After these steps, your device will join the network, and you will see decoded moisture readings in the "Live data" tab on the TTN console. From there, you can use TTN's integrations to forward the data to Datacake or AWS.
+After these steps, your device will join the network, and you will see decoded moisture readings in the "Live data" tab on the TTN console. From there, you can use TTN's integrations to forward the data to Datacake. This can be done bt simply following the steps on Datacake's platform.
