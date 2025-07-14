@@ -41,7 +41,7 @@ This project has two primary data paths:
 * **LoRa Module:** Seeed Studio WIO-SX1262 (B2B Connector Version)
 
 ### **Firmware (`/src`)**
-* **`firmware_lorawan`**: Uses the **RadioLib** library for LoRaWAN communication and **ThingsML** for efficient payload encoding. Includes robust hardware initialization for the XIAO's specific TCXO and RF antenna switch.
+* **`firmware_lorawan_1.1_TTN & firmware_lorawan_1.0.x_OTAA_KPN`**: Uses the **RadioLib** library for LoRaWAN communication (in src/firmware_lorawan_1.0.x_OTAA_KPN: **ThingsML** for efficient payload encoding). Includes hardware initialization for the XIAO's specific TCXO and RF antenna switch and the correct pinout.
 * **`firmware_wifi`**: A standard implementation using the **ArduinoIoTCloud** library for direct Wi-Fi connectivity.
 
 ### **Cloud Functions (`/cloud_functions`)**
