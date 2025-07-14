@@ -10,7 +10,7 @@ The primary data path for this project uses LoRaWAN to achieve long-range commun
 
 ESP32 -> LoRaWAN -> The Things Network -> AWS Lambda -> Arduino Cloud API
 
-└-> Datacake HTTP Endpoint
+||||||||||||||||||||||||||||||└-> Datacake HTTP Endpoint
 
 A secondary Wi-Fi firmware is included for direct connection to Arduino Cloud when a Wi-Fi network is available.
 
