@@ -2,6 +2,19 @@
 
 This repository contains the complete firmware and cloud integration code for an ESP32-S3 based environmental sensor. The project is designed to be flexible, allowing data transmission to multiple cloud platforms (Arduino Cloud, Datacake) via two different connectivity methods: LoRaWAN (through KPN Things) and Wi-Fi.
 
+
+## ⚠️ Current Project Status - Prototype
+
+This project is currently in a prototype stage.
+
+The primary goal is to use LoRaWAN with **KPN Things** via the **OTAA (Over-the-Air Activation)** method. At present, the device firmware is theoretically correct but is unable to receive the `Join Accept` downlink from the KPN network. We are in contact with KPN to resolve this hardware/protocol compatibility issue.
+
+Because of this, the current status is:
+* **KPN Things Cloud Testing:** The data flow from **KPN Things -> AWS -> Arduino Cloud** and **KPN -> Datacake** can be fully tested using the **KPN Device Simulator**. This allows you to verify the entire cloud backend is working correctly without a physical device.
+* **End-to-End Device Testing:** To test the physical device sending data all the way to a cloud platform, the current working method is to use **ABP (Activation by Personalization) with The Things Network (TTN)**.
+
+The next major update will be the **"OTAA Support Update"** once the downlink issue with KPN Things is resolved.
+
 ## System Architecture
 
 This project has two primary data paths:
@@ -32,3 +45,29 @@ This project has two primary data paths:
 
 ## Setup and Deployment
 See the README files within each component's directory for specific deployment instructions. A `platformio.ini` file is provided for easy compilation and library management.
+
+
+
+
+## Setup and Deployment Guide
+
+### KPN Things Setup (for Cloud Testing)
+This path allows you to test the entire cloud data flow using a simulated device.
+
+1.  **Create an Account:** Register for an account on the KPN Things portal.
+2.  **Follow KPN Instructions:** Follow the official KPN Things documentation to set up your cloud components:
+    * Create **Destinations** pointing to your deployed AWS Lambda and Datacake endpoints.
+    * Create a **Flow** to direct data.
+3.  **Use the Device Simulator:**
+    * In the KPN Things portal, you can use the **Device Simulator** to send test payloads.
+    * This is extremely useful for verifying that your destinations and cloud functions are working correctly *before* getting the physical device to connect. You can send simulated SenML JSON payloads to test the entire data flow.
+
+### The Things Network (TTN) Setup (for Device Testing with ABP)
+This is the current working method for testing the physical LoRaWAN device end-to-end.
+
+1.  **Register on TTN:** Create an account and an application on The Things Network console.
+2.  **Add Device with ABP:** Register your device, making sure to select **ABP (Activation by Personalization)** as the activation mode.
+3.  **Enable Frame Counter Resets:** In your device's settings on TTN, go to "General settings" -> "Join settings" and enable **"Resets Frame Counters"**. This is critical for development without persistence.
+4.  **Copy Credentials:** Copy the **Device Address**, **Network Session Key**, and **App Session Key** into the `/src/firmware_abp/secrets_abp.h` file.
+5.  **Compile and Upload:** Use PlatformIO to build and upload the `abp` environment to your device.
+
