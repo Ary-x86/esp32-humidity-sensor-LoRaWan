@@ -16,9 +16,8 @@ Because of this, the current status is:
 
 The current goal is to get OTAA working with KPN's LoRaWan 1.0.4. The next major update will be the **"OTAA Support Update"** once the downlink issue with KPN Things is resolved.
 
-![screenshot](docs/Prototype state annotation crop.png)
+<img width="859" height="382" alt="image" src="https://github.com/user-attachments/assets/2491575f-fcd7-4113-aa8d-45dbd7d6e5f0" />
 
-![Image]([https://github.com/[username]/[reponame]/blob/[branch]/image.jpg](https://github.com/Ary-x86/esp32-humidity-sensor-LoRaWan/blob/e34475d61292b6a5a50941ba6618f04556c8cb64/docs/Prototype%20state%20annotation%20crop.png)?raw=true)
 
 
 ## System Architecture
