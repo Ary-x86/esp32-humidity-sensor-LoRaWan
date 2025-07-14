@@ -21,7 +21,7 @@ This project is currently in the prototype and testing phase.
 
 * **KPN Things (OTAA):** The primary goal is to use the KPN LoRaWAN network. Currently, we are facing an issue where the device can send `join request` uplinks, but fails to receive the `join accept` downlink. We are in contact with KPN to resolve this potential hardware/network compatibility issue.
 
-* **The Things Network (TTN):** End-to-end testing of the physical hardware is **fully working** using **OTAA on The Things Network (TTN)**, which supports LoRaWAN 1.1. The `firmware_ttn_otaa` is the current stable reference.
+* **The Things Network (TTN):** End-to-end testing of the physical hardware is **fully working** using **OTAA on The Things Network (TTN)**, which supports LoRaWAN 1.1. This folder is the current stable reference.
 
 * **Next Steps:** Once the downlink issue with KPN is resolved, the LoRaWAN firmware will be finalized. This will be released as the "OTAA Support Update".
 
