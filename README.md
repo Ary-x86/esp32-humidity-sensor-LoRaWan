@@ -12,7 +12,7 @@ The primary goal is to use LoRaWAN 1.0.x with **KPN Things** via the **OTAA (Ove
 Because of this, the current status is:
 * **KPN Things Cloud Testing:** The data flow from **KPN Things -> AWS -> Arduino Cloud** and **KPN -> Datacake** can be fully tested using the **KPN Device Simulator**. This allows you to verify the entire cloud backend is working correctly without a physical device.
 * **Testing on TTN with LoRaWan 1.0.x:** To test the physical device sending data all the way to a cloud platform, the current working method for LoRaWaN 1.0.x (Also KPN Things LW Spec)  is to use **ABP (Activation by Personalization) with The Things Network (TTN)**.
-* **Testing on TTN with LoRaWan 1.1:** To test the physical device sending data all the way to a cloud platform, the current working method for LoRaWan 1.1 is to use **OTAA with The Things Network (TTN)**. 
+* **Testing on TTN with LoRaWan 1.1:** To test the physical device sending data all the way to a cloud platform, the current working method for LoRaWan 1.1 is to use **OTAA with The Things Network (TTN)**. OTAA works with LoRaWAN 1.1, but unfortunately KPN doesn't (yet) support LoRaWan 1.1.
 
 The current goal is to get OTAA working with KPN's LoRaWan 1.0.4. The next major update will be the **"OTAA Support Update"** once the downlink issue with KPN Things is resolved.
 
