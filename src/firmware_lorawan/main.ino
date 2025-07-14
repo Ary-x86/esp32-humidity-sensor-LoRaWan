@@ -1,7 +1,4 @@
-/*
- * FINAL LORAWAN SKETCH for XIAO ESP32S3 with WIO-SX1262
- * This version uses the definitive, correct initialization sequence.
- */
+// This version does NOT use persistence / ESP32 Deep Sleep
 
 #include <Arduino.h>
 #include <SPI.h>
@@ -10,12 +7,26 @@
 #include "config.h"
 #include "secrets.h"
 
-// Use the manual constructor from the board's confirmed pinout
+// RadioBoards can also be used for the XIAO ESP32S3 + WIO-SX1262, this code uses the manual constructor
+
+
+// Moisture Sensor SETUP
+const int MOIST_PIN = A0; // analog pin for moisture sensor
+
+// IMPORTANT: These values should be calibrated accordingly
+int DROGE_WAARDE = 3400; // Raw value that should be completely dry (slider all the way to the left in DataCake)
+int NATTE_WAARDE = 1240; // Raw analog value when sensor is fully wet (all the way to the right in datacake)
+
+const int NUM_METINGEN = 10; // Number of readings to average for a stable result
+const unsigned long INDIVIDUAL_MEET_INTERVAL = 50; // ms delay between readings
+
+
+//Use the manual constructor from the board's confirmed pinout in config.h
 SX1262 radio = new Module(LORA_NSS, LORA_DIO1, LORA_RST, LORA_BUSY);
 
 // ThingsML Payload Setup
 SenMLPack data_pack;
-SenMLDoubleRecord temperature_rec(THINGSML_TEMPERATURE);
+SenMLDoubleRecord moisture_rec(THINGSML_HUMIDITY);
 
 // LoRaWAN Node Setup
 const uint8_t subBand = 0; // Use 0 for EU868
@@ -30,14 +41,27 @@ static const Module::RfSwitchMode_t rfswitch_table[] = {
   END_OF_MODE_TABLE,
 };
 
+// Helper: converts the raw sensor value into a percentage
+int getMoisturePercentage(int rawValue) {
+  if (DROGE_WAARDE == NATTE_WAARDE) { return 0; }
+  int percentage = 100 - ((rawValue - NATTE_WAARDE) * 100 / (DROGE_WAARDE - NATTE_WAARDE));
+  return constrain(percentage, 0, 100);
+}
+
 void setup() {
   Serial.begin(115200);
   delay(2000); 
   Serial.println("\n--- LoRaWAN Sensor Node ---");
 
-  data_pack.add(temperature_rec);
+  // --- Sensor Setup ---
+  pinMode(MOIST_PIN, INPUT);
+  analogReadResolution(12); // Set ADC to 12-bit resolution (0-4095)
+  Serial.println("[Sensor] Moisture sensor configured.");
 
-  // STEP 1: Apply RF switch configuration BEFORE begin()
+  // --- ThingsML Packet Setup ---
+  data_pack.add(moisture_rec);
+
+  //Apply RF switch configuration BEFORE radio.begin()
   Serial.print("[RadioLib] Applying RF switch table... ");
   int16_t state = radio.setRfSwitchTable(rfswitch_pins, rfswitch_table);
   if (state != RADIOLIB_ERR_NONE) {
@@ -46,7 +70,7 @@ void setup() {
   }
   Serial.println("success!");
 
-  // STEP 2: Initialize radio with parameter-less begin()
+  // radio.begin - the default parameters should be correct
   Serial.print("[RadioLib] Initializing radio... ");
   state = radio.begin();
   if (state != RADIOLIB_ERR_NONE) {
@@ -55,7 +79,7 @@ void setup() {
   }
   Serial.println("success!");
 
-  // STEP 3: Configure the TCXO AFTER begin()
+  // configure the TCXO AFTER begin() - might be redundant, should be enabled by default
   Serial.print("[RadioLib] Setting TCXO... ");
   state = radio.setTCXO(1.6);
   if (state != RADIOLIB_ERR_NONE) {
@@ -64,7 +88,7 @@ void setup() {
   }
   Serial.println("success!");
   
-  // STEP 4: Configure and join LoRaWAN
+  // Setup for LoRaWAN
   Serial.print("[LoRaWAN] Configuring node... ");
   node.beginOTAA(joinEUI, devEUI, nwkKey, appKey);
   Serial.println("success!");
@@ -79,21 +103,34 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("\n--- Sending Uplink ---");
+  Serial.println("\n--- Reading Sensor & Sending Uplink ---");
 
-  float current_temp = 20.0 + (radio.random(100) / 10.0);
-  temperature_rec.set(current_temp);
-  Serial.printf("Set temperature value to: %.2f\n", current_temp);
+  // Read the raw sensor value with averaging for stability
+  long totalRawValue = 0;
+  for (int i = 0; i < NUM_METINGEN; i++) {
+    totalRawValue += analogRead(MOIST_PIN);
+    delay(INDIVIDUAL_MEET_INTERVAL);
+  }
+  int raw_moisture = totalRawValue / NUM_METINGEN;
 
+  //Convert the raw value to a moisture percentage
+  int moisture_percent = getMoisturePercentage(raw_moisture);
+  Serial.printf("Raw Value: %d, Moisture: %d%%\n", raw_moisture, moisture_percent);
+
+  // Set the value in the ThingsML record
+  moisture_rec.set(moisture_percent);
+
+  //Render the packet to a compact CBOR binary payload
   uint8_t cbor_payload[64];
   int payload_len = data_pack.toCbor((char*)cbor_payload, sizeof(cbor_payload));
   if (payload_len <= 0) {
     Serial.println("[ThingsML] ERROR: Failed to render CBOR payload.");
-    delay(60000);
+    delay(60000); // Wait before retrying
     return;
   }
   Serial.printf("[ThingsML] Rendered CBOR payload, %d bytes.\n", payload_len);
 
+  // Send the payload over LoRaWAN
   Serial.print("[LoRaWAN] Sending uplink... ");
   int16_t state = node.sendReceive(cbor_payload, payload_len);
 
