@@ -62,12 +62,16 @@ This path allows you to test the entire cloud data flow using a simulated device
     * In the KPN Things portal, you can use the **Device Simulator** to send test payloads.
     * This is extremely useful for verifying that your destinations and cloud functions are working correctly *before* getting the physical device to connect. You can send simulated SenML JSON payloads to test the entire data flow.
 
-### The Things Network (TTN) Setup (for Device Testing with ABP)
-This is the current working method for testing the physical LoRaWAN device end-to-end.
+### The Things Network (TTN) Setup (for Device Testing with ABP) - found in .src/firmware_lorawan_1.1_TTN/old/* 
+This is the current working method for testing with the less secure ABP.
 
 1.  **Register on TTN:** Create an account and an application on The Things Network console.
 2.  **Add Device with ABP:** Register your device, making sure to select **ABP (Activation by Personalization)** as the activation mode.
 3.  **Enable Frame Counter Resets:** In your device's settings on TTN, go to "General settings" -> "Join settings" and enable **"Resets Frame Counters"**. This is critical for development without persistence.
 4.  **Copy Credentials:** Copy the **Device Address**, **Network Session Key**, and **App Session Key** into the `/src/firmware_abp/secrets_abp.h` file.
 5.  **Compile and Upload:** Use PlatformIO to build and upload the `abp` environment to your device.
+
+### The Things Network (TTN) Setup (for Device Testing with OTAA) - found in .src/firmware_lorawan_1.1_TTN/* 
+This is the current working method for testing the physical LoRaWAN device end-to-end. 
+See README.md in src/firmware_lorawan_1.1_TTN/ for instructions.
 
