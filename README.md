@@ -1,6 +1,6 @@
 # ESP32 Multi-Cloud IoT Sensor (LoRaWAN & Wi-Fi)
 
-!! This Repository is out of date. The up to date code is not released yet but finished. The documentation for the new code is available at: https://ary-x86.github.io/Think2Day-Vochtsensor/02-hardware.html
+!! This Repository is out of date. The up to date code is not released yet but finished. The documentation for the new code is available at: https://ary-x86.github.io/Think2Day-Vochtsensor
 
 This repository contains the complete firmware and cloud integration code for an ESP32-S3 based environmental sensor. The project is designed to be flexible, allowing data transmission to multiple cloud platforms (Arduino Cloud, Datacake) via two different connectivity methods: LoRaWAN (through KPN Things) and Wi-Fi.
 
